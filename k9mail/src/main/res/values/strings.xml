@@ -572,6 +572,13 @@ Please submit bug reports, contribute new features and ask questions at
     <string name="account_settings_quote_prefix_label">Quoted text prefix</string>
     <string name="account_settings_crypto">Cryptography</string>
     <string name="account_settings_crypto_app">OpenPGP app</string>
+    <string name="account_settings_crypto_app_none">None</string>
+    <string name="account_settings_crypto_auto_signature">Auto-sign</string>
+    <string name="account_settings_crypto_auto_signature_summary_disabled">Set a key in order to enable this option.</string>
+    <string name="account_settings_crypto_auto_signature_summary">Use the account\'s email address to guess the signature key.</string>
+    <string name="account_settings_crypto_auto_encrypt">Auto-encrypt</string>
+    <string name="account_settings_crypto_auto_encrypt_summary">Automatically encrypt if a public key matches a recipient.</string>
+    <string name="account_settings_crypto_auto_encrypt_summary_disabled">Set a key in order to enable this option.</string>
     <string name="account_settings_crypto_key">My Key</string>
     <string name="account_settings_no_openpgp_provider_installed">No OpenPGP app installed</string>
 

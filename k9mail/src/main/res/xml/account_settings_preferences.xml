@@ -476,6 +476,21 @@
             android:key="crypto_key"
             android:title="@string/account_settings_crypto_key" />
 
+        <CheckBoxPreference
+            android:dependency="crypto_app"
+            android:key="crypto_auto_sign"
+            android:persistent="false"
+            android:summary="@string/account_settings_crypto_auto_signature_summary"
+            android:title="@string/account_settings_crypto_auto_signature"/>
+
+        <CheckBoxPreference
+            android:dependency="crypto_app"
+            android:key="crypto_auto_encrypt"
+            android:persistent="false"
+            android:summary="@string/account_settings_crypto_auto_encrypt_summary"
+            android:title="@string/account_settings_crypto_auto_encrypt"/>
+
+
     </PreferenceScreen>
 
 </PreferenceScreen>

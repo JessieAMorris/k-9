@@ -113,6 +113,8 @@ public class AccountSettings extends K9PreferenceActivity {
     private static final String PREFERENCE_CRYPTO = "crypto";
     private static final String PREFERENCE_CRYPTO_APP = "crypto_app";
     private static final String PREFERENCE_CRYPTO_KEY = "crypto_key";
+    private static final String PREFERENCE_CRYPTO_AUTO_SIGN = "crypto_auto_sign";
+    private static final String PREFERENCE_CRYPTO_AUTO_ENCRYPT = "crypto_auto_encrypt";
     private static final String PREFERENCE_CLOUD_SEARCH_ENABLED = "remote_search_enabled";
     private static final String PREFERENCE_REMOTE_SEARCH_NUM_RESULTS = "account_remote_search_num_results";
     private static final String PREFERENCE_REMOTE_SEARCH_FULL_TEXT = "account_remote_search_full_text";
@@ -179,6 +181,8 @@ public class AccountSettings extends K9PreferenceActivity {
     private boolean mHasCrypto = false;
     private OpenPgpAppPreference mCryptoApp;
     private OpenPgpKeyPreference mCryptoKey;
+    private CheckBoxPreference mCryptoAutoSign;
+    private CheckBoxPreference mCryptoAutoEncrypt;
 
     private PreferenceScreen mSearchScreen;
     private CheckBoxPreference mCloudSearchEnabled;
@@ -694,6 +698,9 @@ public class AccountSettings extends K9PreferenceActivity {
             mCryptoApp = (OpenPgpAppPreference) findPreference(PREFERENCE_CRYPTO_APP);
             mCryptoKey = (OpenPgpKeyPreference) findPreference(PREFERENCE_CRYPTO_KEY);
 
+            mCryptoAutoSign = (CheckBoxPreference) findPreference(PREFERENCE_CRYPTO_AUTO_SIGN);
+            mCryptoAutoEncrypt = (CheckBoxPreference) findPreference(PREFERENCE_CRYPTO_AUTO_ENCRYPT);
+
             mCryptoApp.setValue(String.valueOf(mAccount.getCryptoApp()));
             mCryptoApp.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -701,6 +708,9 @@ public class AccountSettings extends K9PreferenceActivity {
                     mCryptoApp.setValue(value);
 
                     mCryptoKey.setOpenPgpProvider(value);
+
+                    checkAutoSignAndEncrypt(mCryptoKey.getValue(), true);
+
                     return false;
                 }
             });
@@ -713,13 +723,39 @@ public class AccountSettings extends K9PreferenceActivity {
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     long value = (Long) newValue;
                     mCryptoKey.setValue(value);
+
+                    checkAutoSignAndEncrypt(value, true);
+
                     return false;
                 }
             });
+
+            checkAutoSignAndEncrypt(mCryptoKey.getValue(), true);
         } else {
             final Preference mCryptoMenu = findPreference(PREFERENCE_CRYPTO);
             mCryptoMenu.setEnabled(false);
             mCryptoMenu.setSummary(R.string.account_settings_no_openpgp_provider_installed);
+        }
+    }
+
+    private void checkAutoSignAndEncrypt(long keyId, boolean shouldDefault) {
+        if(keyId != 0) {
+            mCryptoAutoSign.setEnabled(true);
+            mCryptoAutoSign.setSummary(R.string.account_settings_crypto_auto_signature_summary);
+
+            mCryptoAutoEncrypt.setEnabled(true);
+            mCryptoAutoEncrypt.setSummary(R.string.account_settings_crypto_auto_encrypt_summary);
+
+            if(shouldDefault) {
+                mCryptoAutoSign.setChecked(true);
+                mCryptoAutoEncrypt.setChecked(true);
+            }
+        } else {
+            mCryptoAutoSign.setEnabled(false);
+            mCryptoAutoSign.setSummary(R.string.account_settings_crypto_auto_signature_summary_disabled);
+
+            mCryptoAutoEncrypt.setEnabled(false);
+            mCryptoAutoEncrypt.setSummary(R.string.account_settings_crypto_auto_encrypt_summary_disabled);
         }
     }
 
@@ -783,6 +819,8 @@ public class AccountSettings extends K9PreferenceActivity {
         if (mHasCrypto) {
             mAccount.setCryptoApp(mCryptoApp.getValue());
             mAccount.setCryptoKey(mCryptoKey.getValue());
+            mAccount.setCryptoAutoSign(mCryptoAutoSign.isChecked());
+            mAccount.setCryptoAutoEncrypt(mCryptoAutoEncrypt.isChecked());
         }
 
         // In webdav account we use the exact folder name also for inbox,

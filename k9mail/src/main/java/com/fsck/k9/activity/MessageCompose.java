@@ -757,10 +757,12 @@ public class MessageCompose extends K9Activity implements OnClickListener,
                 }
             };
             mCryptoSignatureCheckbox.setOnCheckedChangeListener(updateListener);
+            mCryptoSignatureCheckbox.setChecked(mAccount.isCryptoAutoSign());
             mCryptoSignatureUserId = (TextView)findViewById(R.id.userId);
             mCryptoSignatureUserIdRest = (TextView)findViewById(R.id.userIdRest);
             mEncryptCheckbox = (CheckBox)findViewById(R.id.cb_encrypt);
             mEncryptCheckbox.setOnCheckedChangeListener(updateListener);
+            mEncryptCheckbox.setChecked(mAccount.isCryptoAutoEncrypt());
 
             if (mSourceMessageBody != null) {
                 // mSourceMessageBody is set to something when replying to and forwarding decrypted
@@ -3496,11 +3498,11 @@ public class MessageCompose extends K9Activity implements OnClickListener,
     }
 
     private boolean shouldEncrypt() {
-        return isCryptoProviderEnabled() && mEncryptCheckbox.isChecked();
+        return isCryptoProviderEnabled() && mEncryptCheckbox != null && mEncryptCheckbox.isChecked();
     }
 
     private boolean shouldSign() {
-        return isCryptoProviderEnabled() && mCryptoSignatureCheckbox.isChecked();
+        return isCryptoProviderEnabled() && mCryptoSignatureCheckbox != null && mCryptoSignatureCheckbox.isChecked();
     }
 
     class DoLaunchOnClickListener implements OnClickListener {

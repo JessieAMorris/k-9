@@ -221,6 +221,8 @@ public class Account implements BaseAccount, StoreConfig {
     private boolean mSyncRemoteDeletions;
     private String mCryptoApp;
     private long mCryptoKey;
+    private boolean mCryptoAutoSign;
+    private boolean mCryptoAutoEncrypt;
     private boolean mMarkMessageAsReadOnView;
     private boolean mAlwaysShowCcBcc;
     private boolean mAllowRemoteSearch;
@@ -316,6 +318,8 @@ public class Account implements BaseAccount, StoreConfig {
         mSyncRemoteDeletions = true;
         mCryptoApp = NO_OPENPGP_PROVIDER;
         mCryptoKey = 0;
+        mCryptoAutoSign = false;
+        mCryptoAutoEncrypt = false;
         mAllowRemoteSearch = false;
         mRemoteSearchFullText = false;
         mRemoteSearchNumResults = DEFAULT_REMOTE_SEARCH_NUM_RESULTS;
@@ -465,6 +469,10 @@ public class Account implements BaseAccount, StoreConfig {
 
         String cryptoApp = prefs.getString(mUuid + ".cryptoApp", NO_OPENPGP_PROVIDER);
         setCryptoApp(cryptoApp);
+        mCryptoKey = prefs.getLong(mUuid + ".cryptoKey", 0);
+        mCryptoAutoSign = prefs.getBoolean(mUuid + ".cryptoAutoSign", false);
+        mCryptoAutoEncrypt = prefs.getBoolean(mUuid + ".cryptoAutoSign", false);
+
         mAllowRemoteSearch = prefs.getBoolean(mUuid + ".allowRemoteSearch", false);
         mRemoteSearchFullText = prefs.getBoolean(mUuid + ".remoteSearchFullText", false);
         mRemoteSearchNumResults = prefs.getInt(mUuid + ".remoteSearchNumResults", DEFAULT_REMOTE_SEARCH_NUM_RESULTS);
@@ -727,6 +735,8 @@ public class Account implements BaseAccount, StoreConfig {
         editor.putBoolean(mUuid + ".stripSignature", mStripSignature);
         editor.putString(mUuid + ".cryptoApp", mCryptoApp);
         editor.putLong(mUuid + ".cryptoKey", mCryptoKey);
+        editor.putBoolean(mUuid + ".cryptoAutoSign", mCryptoAutoSign);
+        editor.putBoolean(mUuid + ".cryptoAutoEncrypt", mCryptoAutoEncrypt);
         editor.putBoolean(mUuid + ".allowRemoteSearch", mAllowRemoteSearch);
         editor.putBoolean(mUuid + ".remoteSearchFullText", mRemoteSearchFullText);
         editor.putInt(mUuid + ".remoteSearchNumResults", mRemoteSearchNumResults);
@@ -1614,6 +1624,22 @@ public class Account implements BaseAccount, StoreConfig {
 
     public void setCryptoKey(long keyId) {
         mCryptoKey = keyId;
+    }
+
+    public boolean isCryptoAutoSign() {
+        return mCryptoAutoSign;
+    }
+
+    public void setCryptoAutoSign(boolean autoSign) {
+        mCryptoAutoSign = autoSign;
+    }
+
+    public boolean isCryptoAutoEncrypt() {
+        return mCryptoAutoEncrypt;
+    }
+
+    public void setCryptoAutoEncrypt(boolean autoEncrypt) {
+        mCryptoAutoEncrypt = autoEncrypt;
     }
 
     public boolean allowRemoteSearch() {
